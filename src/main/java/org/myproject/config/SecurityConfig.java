@@ -21,6 +21,12 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private MyAuthenticationSuccessHandler successHandler;
+
+    @Autowired
+    private MyAuthenticationFailureHandler failureHandler;
+
     // 配置自定义的过滤器 必须手动注入这个 Bean
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -37,8 +43,8 @@ public class SecurityConfig {
         //必须确保这个路径在 antMatchers 中被 permitAll()。 否则，你会陷入“想登录但登录接口要求先登录”的死循环
         filter.setFilterProcessesUrl("/user/login"); // 设置登录接口路径
         // 挂载之前写好的处理器
-        filter.setAuthenticationSuccessHandler(new MyAuthenticationSuccessHandler());
-        filter.setAuthenticationFailureHandler(new MyAuthenticationFailureHandler());
+        filter.setAuthenticationSuccessHandler(successHandler);
+        filter.setAuthenticationFailureHandler(failureHandler);
 
         return filter;
     }

@@ -25,7 +25,7 @@ public class JwtUtils {
 
     // 解析 Token
     public String getUsernameFromToken(String token) {
-        return Jwts.parser().setSigningAlgorithm(SignatureAlgorithm.HS256).setSigningKey(SECRET)
+        return Jwts.parser().setSigningKey(SECRET)
                 .parseClaimsJws(token).getBody().getSubject();
     }
 }

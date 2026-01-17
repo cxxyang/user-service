@@ -3,6 +3,7 @@ package org.myproject.config;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import java.io.IOException;
  * 在 Security 的过滤器链中，登录失败的异常会被 AuthenticationFilter 捕获，它不会进入你自定义的 @RestControllerAdvice 全局异常处理器。
  * 因此，必须使用 failureHandler 来处理。
  */
+@Component
 public class MyAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     @Override
