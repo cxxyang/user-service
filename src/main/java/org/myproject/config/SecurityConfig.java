@@ -1,6 +1,7 @@
 package org.myproject.config;
 
 import org.myproject.filter.JsonLoginFilter;
+import org.myproject.filter.JwtAuthenticationFilter;
 import org.myproject.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +25,9 @@ public class SecurityConfig {
 
     @Autowired
     private MyAuthenticationSuccessHandler successHandler;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
     private MyAuthenticationFailureHandler failureHandler;
@@ -55,11 +60,16 @@ public class SecurityConfig {
         http.csrf().disable()//禁用 CSRF (如果是前后端分离项目必须禁用，否则 POST 请求会被拦截)
                 .cors()//允许跨域
                 .and()
+                // 禁用 Session，改为无状态管理
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 // 配置请求权限
                 .authorizeRequests()
                 .antMatchers("/user/login", "/user/register").permitAll() // 允许匿名访问的接口
                 .anyRequest().authenticated() // 其他所有请求都需要登录后访问
                 .and()
+                //每一个请求前都先校验 Token
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 将自定义的 JSON 过滤器插入到原有的 UsernamePasswordAuthenticationFilter 位置
                 .addFilterAt(jsonLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 // 配置登录方式

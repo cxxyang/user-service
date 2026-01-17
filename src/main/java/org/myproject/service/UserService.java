@@ -1,12 +1,15 @@
 package org.myproject.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.myproject.entry.RegisterDTO;
 import org.myproject.entry.SysUser;
 import org.myproject.mapper.UserMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -16,11 +19,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public String getAllUser() {
-
-        return "user";
-
-
+    public List<SysUser> getAllUser() {
+        return userMapper.selectList(new QueryWrapper<SysUser>());
     }
 
     public Long registerUser(RegisterDTO registerDTO) {
