@@ -25,5 +25,23 @@ spring:
   config:
     import:
       - nacos:${spring.application.name}.yaml?group=TEST_GROUP # 导入 Nacos 配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://vdebian.local:3306/javacode?serverTimezone=GMT%2B8
+    username: root
+    password: 11223300
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+mybatis-plus:
+  # 1. 配置映射文件路径（如果你有自定义 SQL）
+  mapper-locations: classpath:mapper/*.xml
+  # 2. 实体类包别名（让 XML 里的 resultType 不用写长长的全限定名）
+  type-aliases-package: org.myproject.entry
+  configuration:
+    # 3. 开启驼峰命名转换（数据库 user_id -> 实体类 userId）
+    map-underscore-to-camel-case: true
+    # 4. 打印 SQL 日志
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
