@@ -4,21 +4,26 @@ server:
     context-path: /api
 
 spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://vdebian.local:3306/javacode?serverTimezone=GMT%2B8
-    username: root
-    password: 11223300
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: user-service # 注册到 Nacos 上的服务名（Gateway 转发就靠这个名字）
+  cloud:
+    nacos:
+      # discovery和config共享这个nacos地址
+      server-addr: vdebian.local:8848
+      #服务发现配置
+      discovery:
+        namespace: d8f34ca5-d036-46a4-babe-d0b1cdcbc133 # 命名空间 ID（可选，如果不配置则在 public）
+        group: TEST_GROUP # 分组名（可选，默认 DEFAULT_GROUP）
+        #cluster-name: HANGZHOU # 集群名（可选，用于跨机房容灾）
+
+      #配置中心配置
+      config:
+        namespace: d8f34ca5-d036-46a4-babe-d0b1cdcbc133
+        group: TEST_GROUP
+        file-extension: yaml
+  # 执行到 import 行时，去 Nacos 下载配置,会覆盖本地同名配置
+  config:
+    import:
+      - nacos:${spring.application.name}.yaml?group=TEST_GROUP # 导入 Nacos 配置
 
 
-mybatis-plus:
-  # 1. 配置映射文件路径（如果你有自定义 SQL）
-  mapper-locations: classpath:mapper/*.xml
-  # 2. 实体类包别名（让 XML 里的 resultType 不用写长长的全限定名）
-  type-aliases-package: org.myproject.entry
-  configuration:
-    # 3. 开启驼峰命名转换（数据库 user_id -> 实体类 userId）
-    map-underscore-to-camel-case: true
-    # 4. 打印 SQL 日志
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

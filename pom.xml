@@ -8,6 +8,7 @@
     <artifactId>user-service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+<!-- parent标签   自动匹配版本，但它只负责 Spring 官方自己家的项目-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -22,6 +23,19 @@
         <druid.version>1.2.18</druid.version>
         <jwt.version>0.9.1</jwt.version>
     </properties>
+<!--    dependencyManagement  版本字典（不直接下载 Jar 包）：
+它告诉 Maven：“如果在当前项目中有人要用阿里巴巴的东西，但是没写版本号，就按照这本字典里的版本来拉取-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2021.0.5.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -63,7 +77,17 @@
             <version>${jwt.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
     </dependencies>
+
+
 
 
 </project>
